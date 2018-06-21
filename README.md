@@ -1,1 +1,1 @@
-初步实现人脸识别
+The preliminary realization of face recognition.
