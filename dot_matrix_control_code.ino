@@ -1,0 +1,66 @@
+/////8*8 dot matrix control code
+/////by MaoYuxin
+#include <LedControl.h>  
+//#include <SoftwareSerial.h>
+int DIN = 12;  
+int CS =  11;  
+int CLK = 10;  
+  
+byte e[8]=     {0x7C,0x7C,0x60,0x7C,0x7C,0x60,0x7C,0x7C};  //E  
+byte d[8]=     {0x78,0x7C,0x66,0x66,0x66,0x66,0x7C,0x78};  //D  
+byte u[8]=     {0x66,0x66,0x66,0x66,0x66,0x66,0x7E,0x7E};  //U  
+byte c[8]=     {0x7E,0x7E,0x60,0x60,0x60,0x60,0x7E,0x7E};  //C  
+byte eight[8]= {0x7E,0x7E,0x66,0x7E,0x7E,0x66,0x7E,0x7E};  //8  
+byte s[8]=     {0x7E,0x7C,0x60,0x7C,0x3E,0x06,0x3E,0x7E};  //S  
+byte dot[8]=   {0x00,0x00,0x00,0x00,0x00,0x00,0x18,0x18};  //.  
+byte o[8]=     {0x7E,0x7E,0x66,0x66,0x66,0x66,0x7E,0x7E};  //O  
+byte m[8]=     {0xE7,0xFF,0xFF,0xDB,0xDB,0xDB,0xC3,0xC3};  //M  
+byte smile[8]= {0x3C,0x42,0xA5,0x81,0xA5,0x99,0x42,0x3C};//笑脸  
+byte neutral[8]= {0x3C,0x42,0xA5,0x81,0xBD,0x81,0x42,0x3C};//标准脸  
+
+char Comchar ;
+
+LedControl lc=LedControl(DIN,CLK,CS,4);  
+  
+void setup()
+{  
+   Serial.begin(9600);
+   lc.shutdown(0,false);       //启动时，MAX72XX处于省电模式  
+   lc.setIntensity(0,8);       //将亮度设置为最大值  
+   printByte(neutral);//显示8 
+      lc.setIntensity(0,1);       //将亮度设置为最小值  
+}
+  
+void loop()
+{   
+   // while(Serial.available()>0)
+    Serial.flush();
+    Comchar = Serial.read();
+    //Serial.write(Comchar);
+    //Serial.println();
+    if(Comchar == '1')
+    {
+      printByte(neutral);//显示标准脸
+      lc.setIntensity(0,1);       //将亮度设置为最小值
+      //delay(1000);
+     }
+    if(Comchar =='2')
+    {
+       printByte(smile);//显示笑脸  
+       lc.setIntensity(0,8);       //将亮度设置为最大值
+       //delay(1000);
+     } 
+    
+     //delay(10);
+ 
+}  
+  
+//点阵显示函数  
+void printByte(byte character [])  
+{  
+  int i = 0;  
+  for(i=0;i<8;i++)  
+  {  
+    lc.setRow(0,i,character[i]);  
+  }  
+}  
